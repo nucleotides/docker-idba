@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -ev
+
+# The first argument is the location of the reads in the container filesystem.
+# The will be present in a read-only directory
+READS=$1
+
+# The second argument is a directory with write-access where the final
+# assembly should be written to.
+DIR=$2
+LOG=$DIR/log.txt
+
+# The assembly should be written to the file "contigs.fa" in the output directory
+ASSEMBLY=$DIR/contigs.fa
+
+TMP_DIR=`mktemp -d`
+gunzip $READS --stdout > $TMP_DIR/reads.fq
+
+idba --out $TMP_DIR --read $TMP_DIR/reads.fq 2> $LOG 1>&2
+
+rm reads.fq
+
+#cp $TMP_DIR/contigs.fa $ASSEMBLY
