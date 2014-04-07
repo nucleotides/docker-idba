@@ -21,4 +21,6 @@ idba --out $TMP_DIR --read $TMP_DIR/reads.fq 2> $LOG 1>&2
 
 rm reads.fq
 
-#cp $TMP_DIR/contigs.fa $ASSEMBLY
+OUTPUT=`ls -t $TMP_DIR/graph-*.fa | head -n 1`
+
+cp $OUPUT $ASSEMBLY
