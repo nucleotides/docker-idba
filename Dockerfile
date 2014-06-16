@@ -1,9 +1,10 @@
 FROM debian:jessie
 MAINTAINER Michael Barton, mail@michaelbarton.me.uk
 
-RUN echo "deb http://http.debian.net/debian jessie main contrib non-free" > /etc/apt/sources.list
 RUN apt-get update -y
-RUN apt-get install -y idba
-ADD run /
+RUN apt-get install -y wget
+RUN wget --quiet http://hku-idba.googlecode.com/files/idba-1.1.1.tar.gz -O /tmp/idba-1.1.1.tar.gz
 
-ENTRYPOINT ["/run"]
+RUN apt-get install -y gcc build-essential make sed autoconf
+
+ADD install /usr/local/bin/

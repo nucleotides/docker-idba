@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -ev
+set -o xtrace
+set -o errexit
+set -o nounset
 
 # The first argument is the location of the reads in the container filesystem.
 # The will be present in a read-only directory
