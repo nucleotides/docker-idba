@@ -7,8 +7,11 @@ RUN wget --quiet http://hku-idba.googlecode.com/files/idba-1.1.1.tar.gz -O /tmp/
 
 RUN apt-get install -y gcc build-essential make sed autoconf
 
-ADD install /usr/local/bin/
-RUN /usr/local/bin/install
+RUN tar xzf /tmp/idba-1.1.1.tar.gz
+RUN sed --in-place 's/kMaxShortSequence = 128;/kMaxShortSequence = 1024;/' /idba-1.1.1/src/sequence/short_sequence.h
+
+RUN cd /idba-1.1.1 && ./configure && make && make install
+RUN mv /idba-1.1.1/bin/* /usr/local/bin/
 
 ADD run /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/run"]
+ENTRYPOINT ["/run"]
