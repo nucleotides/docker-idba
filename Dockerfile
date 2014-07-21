@@ -14,4 +14,5 @@ RUN cd /idba-1.1.1 && ./configure && make && make install
 RUN mv /idba-1.1.1/bin/* /usr/local/bin/
 
 ADD run /usr/local/bin/
+ADD Procfile /
 ENTRYPOINT ["/usr/local/bin/run"]
