@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 set -o errexit
 set -o nounset
 
@@ -22,19 +20,19 @@ READS=$2
 
 # Determine which process to run
 PROC=$1
-CMD=$(grep ${PROC} /Procfile | cut -f 2 -d ':')
+CMD=$(egrep ^${PROC}: /Procfile | cut -f 2 -d ':')
 
 if [[ -z ${CMD} ]]; then
-	echo "Abort, no proc found for ${PROC}."
-	exit 1
+  echo "Abort, no proc found for ${PROC}."
+  exit 1
 fi
 
 # Convert reads to fastq
-TMP=`mktemp -d`
+TMP=$(mktemp -d)
 gunzip $READS --stdout > $TMP/reads.fq
 fq2fa --paired ${TMP}/reads.fq ${TMP}/reads.fa
 
-${CMD}
+eval ${CMD}
 
 OUTPUT=$(ls -t $TMP/graph-*.fa | head -n 1)
 cp $OUTPUT $ASSEMBLY
