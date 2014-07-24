@@ -1,28 +1,38 @@
 #!/bin/bash
 
-set -o xtrace
 set -o errexit
 set -o nounset
 
-# The first argument is the location of the reads in the container filesystem.
-# The will be present in a read-only directory
-READS=$1
+# Destination output directory
+DIR=$3
 
-# The second argument is a directory with write-access where the final
-# assembly should be written to.
-DIR=$2
+# Set up logging
 LOG=$DIR/log.txt
+exec  > ${LOG}
+exec 2> ${LOG}
+set -o xtrace
 
-# The assembly should be written to the file "contigs.fa" in the output directory
+# Destination contigs file
 ASSEMBLY=$DIR/contigs.fa
 
-TMP_DIR=`mktemp -d`
-gunzip $READS --stdout > $TMP_DIR/reads.fq
-cd $TMP_DIR
-fq2fa --paired reads.fq reads.fa
+# Source reads in this container
+READS=$2
 
-idba --out $TMP_DIR --read $TMP_DIR/reads.fa 2> $LOG 1>&2
+# Determine which process to run
+PROC=$1
+CMD=$(egrep ^${PROC}: /Procfile | cut -f 2 -d ':')
 
-OUTPUT=`ls -t $TMP_DIR/graph-*.fa | head -n 1`
+if [[ -z ${CMD} ]]; then
+  echo "Abort, no proc found for ${PROC}."
+  exit 1
+fi
 
+# Convert reads to fastq
+TMP=$(mktemp -d)
+gunzip $READS --stdout > $TMP/reads.fq
+fq2fa --paired ${TMP}/reads.fq ${TMP}/reads.fa
+
+eval ${CMD}
+
+OUTPUT=$(ls -t $TMP/graph-*.fa | head -n 1)
 cp $OUTPUT $ASSEMBLY
