@@ -8,8 +8,8 @@ DIR=$3
 
 # Set up logging
 LOG=$DIR/log.txt
-exec  > ${LOG}
-exec 2> ${LOG}
+exec  > >(tee ${LOG})
+exec 2>&1
 set -o xtrace
 
 # Destination contigs file
