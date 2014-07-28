@@ -16,7 +16,7 @@ set -o xtrace
 ASSEMBLY=$DIR/contigs.fa
 
 # Source reads in this container
-READS=$2
+INPUTS=$2
 
 # Determine which process to run
 PROC=$1
@@ -27,10 +27,12 @@ if [[ -z ${CMD} ]]; then
   exit 1
 fi
 
-# Convert reads to fastq
+# Decompress reads
 TMP=$(mktemp -d)
-gunzip $READS --stdout > $TMP/reads.fq
-fq2fa --paired ${TMP}/reads.fq ${TMP}/reads.fa
+READS="$TMP/reads.fq"
+
+mkfifo $READS
+gunzip $INPUTS --stdout > $READS &
 
 eval ${CMD}
 
