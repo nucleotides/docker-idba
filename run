@@ -29,10 +29,10 @@ fi
 
 # Decompress reads
 TMP=$(mktemp -d)
-READS="$TMP/reads.fq"
+READS="$TMP/reads.fa"
 
 mkfifo $READS
-gunzip $INPUTS --stdout > $READS &
+gunzip $INPUTS --stdout | fastq_to_fasta > $READS &
 
 eval ${CMD}
 

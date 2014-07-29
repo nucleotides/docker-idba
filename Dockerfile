@@ -2,7 +2,7 @@ FROM debian:jessie
 MAINTAINER Michael Barton, mail@michaelbarton.me.uk
 
 RUN apt-get update -y
-RUN apt-get install -y gcc build-essential make sed autoconf
+RUN apt-get install -y gcc build-essential make sed autoconf fastx-toolkit
 
 ADD http://hku-idba.googlecode.com/files/idba-1.1.1.tar.gz /tmp/
 RUN tar xzf /tmp/idba-1.1.1.tar.gz
