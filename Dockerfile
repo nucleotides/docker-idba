@@ -8,6 +8,9 @@ ADD http://hku-idba.googlecode.com/files/idba-1.1.1.tar.gz /tmp/
 RUN tar xzf /tmp/idba-1.1.1.tar.gz
 RUN sed --in-place 's/kMaxShortSequence = 128;/kMaxShortSequence = 1024;/' /idba-1.1.1/src/sequence/short_sequence.h
 
+# See https://groups.google.com/forum/#!topic/hku-idba/T2mcHkDOpBU
+RUN sed --in-place 's/contig_graph.MergeSimilarPath();//g' /idba-1.1.1/src/sequence/short_sequence.h
+
 RUN cd /idba-1.1.1 && ./configure && make && make install
 RUN mv /idba-1.1.1/bin/* /usr/local/bin/
 
