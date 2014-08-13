@@ -29,12 +29,14 @@ fi
 
 # Decompress reads
 TMP=$(mktemp -d)
+TMP_READS="$TMP/.reads.fq"
 READS="$TMP/reads.fa"
 
-mkfifo $READS
-gunzip $INPUTS --stdout | fastq_to_fasta > $READS &
+mkfifo $TMP_READS
+gunzip $INPUTS --stdout | fastq_to_fasta > $TMP_READS &
+cat $TMP_READS > $READS
 
 eval ${CMD}
 
-OUTPUT=$(ls -t $TMP/graph-*.fa | head -n 1)
+OUTPUT=$(ls -t $TMP/*.fa | head -n 1)
 cp $OUTPUT $ASSEMBLY
