@@ -9,7 +9,7 @@ RUN tar xzf /idba.tar.gz
 RUN sed --in-place 's/kMaxShortSequence = 128;/kMaxShortSequence = 1024;/' /idba-1.1.2/src/sequence/short_sequence.h
 
 # See https://groups.google.com/forum/#!topic/hku-idba/T2mcHkDOpBU
-RUN sed --in-place 's/contig_graph.MergeSimilarPath();//g' /idba-1.1.2/src/sequence/short_sequence.h
+RUN sed --in-place 's/contig_graph.MergeSimilarPath();//g' /idba-1.1.2/src/release/idba_ud.cpp
 
 RUN cd /idba-1.1.2 && \
        ./configure && \
